@@ -1,0 +1,8 @@
+[ 26/02/2022, 14:53:47 ]
+    ===ERROR=== upload_punches() missing 1 required positional argument: 'sensor_id'
+    ===TYPE=== <class 'TypeError'>
+    ===LINENO=== 69
+[ 26/02/2022, 14:54:38 ]
+    ===ERROR=== upload_punches() missing 1 required positional argument: 'sensor_id'
+    ===TYPE=== <class 'TypeError'>
+    ===LINENO=== 69
