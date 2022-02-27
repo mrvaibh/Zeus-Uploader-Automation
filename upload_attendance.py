@@ -50,13 +50,17 @@ try:
     machine_list = file.read().splitlines()
     file.close()
 
-
     # create log file if doesn't exist
     if not os.path.exists('logs.csv'):
         with open('logs.csv', 'w') as csv_file:
             IP_list = [each_line.split(',')[0] for each_line in machine_list]
             csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
             csv_writer.writerow(IP_list)
+
+    with open('logs.csv', 'r') as log_file:
+        data = log_file.readlines()
+
+    list_of_last_log = data[-1].replace('\n', '').split(',')
 
     total_data = []
     logs = []
@@ -65,10 +69,6 @@ try:
     for (index, each_line) in enumerate(machine_list):
         [IP, sensor_id] = each_line.split(',')
 
-        with open('logs.csv', 'r') as log_file:
-            data = log_file.readlines()
-
-        list_of_last_log = data[-1].replace('\n', '').split(',')
         last_log = list_of_last_log[index]
 
         [attendances, machine_time] = upload_punches(IP, sensor_id, last_log)
@@ -116,3 +116,7 @@ except Exception as error:
     ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
 
     print ("Process terminate : {}".format(error))
+
+finally:
+    if conn:
+        conn.disconnect()
