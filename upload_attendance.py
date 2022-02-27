@@ -14,14 +14,14 @@ def upload_punches(IP, sensor_id, last_log):
 
         attendances = []
 
+        try:
+            last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
+        except:
+            last_attendance_time_obj = datetime.strptime('01-01-1990 00:00:00', '%d-%m-%Y %H:%M:%S')
+        
         for attendance in conn.get_attendance():
             if attendance is None:
                 continue
-
-            try:
-                last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
-            except:
-                last_attendance_time_obj = datetime.strptime('01-01-1990 00:00:00', '%d-%m-%Y %H:%M:%S')
 
             if attendance.timestamp >= last_attendance_time_obj:
                 attendances.append({
@@ -36,8 +36,13 @@ def upload_punches(IP, sensor_id, last_log):
         
     except Exception as error:
         attendances = []
-        current_machine_time = last_log
-    
+        try:
+            # validating last log time
+            last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
+            current_machine_time = last_log
+        except:
+            current_machine_time = '01-01-1990 00:00:00'
+
     finally:
         if conn:
             conn.disconnect()
