@@ -18,7 +18,7 @@ def upload_punches(IP, sensor_id, last_log):
             last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
         except:
             last_attendance_time_obj = datetime.strptime('01-01-1990 00:00:00', '%d-%m-%Y %H:%M:%S')
-        
+
         for attendance in conn.get_attendance():
             if attendance is None:
                 continue
@@ -31,9 +31,9 @@ def upload_punches(IP, sensor_id, last_log):
                     'blank2': '',
                     'Sensorid': sensor_id
                 })
-        
+
         current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
-        
+
     except Exception as error:
         attendances = []
         try:
