@@ -5,6 +5,7 @@ __pycache__/
 
 logs.csv
 error_log.txt
+machine_status.html
 
 # C extensions
 *.so

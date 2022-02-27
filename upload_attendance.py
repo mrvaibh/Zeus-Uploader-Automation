@@ -33,8 +33,10 @@ def upload_punches(IP, sensor_id, last_log):
                 })
 
         current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
+        machine_status = True
 
     except Exception as error:
+
         attendances = []
         try:
             # validating last log time
@@ -43,11 +45,17 @@ def upload_punches(IP, sensor_id, last_log):
         except:
             current_machine_time = '01-01-1990 00:00:00'
 
+        machine_status = False
+
     finally:
         if conn:
             conn.disconnect()
 
-    return [attendances, current_machine_time]
+    return {
+        'attendances': attendances,
+        'current_machine_time': current_machine_time,
+        'machine_status': machine_status,
+    }
 
 
 
@@ -84,6 +92,7 @@ try:
 
     total_data = []
     logs = []
+    machines_status_html = '<h1>Last Updated: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + '</h1><hr>'
 
     # Fetching data from all machines one by one
     # and appending to `total_data`
@@ -92,11 +101,18 @@ try:
 
         last_log = list_of_last_log[index]
 
-        [attendances, current_machine_time] = upload_punches(IP, sensor_id, last_log)
-        total_data += attendances
+        returned_data = upload_punches(IP, sensor_id, last_log)
+        total_data += returned_data['attendances']
 
-        logs.append(current_machine_time)
+        logs.append(returned_data['current_machine_time'])
 
+        if returned_data['machine_status']:
+            machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK</h2>\n'''
+        else:
+            machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN</h2>\n'''
+
+    with open('machine_status.html', 'w') as file:
+        file.write(machines_status_html)
 
     if not total_data:
         print('No new punches found')
