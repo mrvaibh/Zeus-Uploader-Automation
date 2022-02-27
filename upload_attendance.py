@@ -31,10 +31,10 @@ def upload_punches(IP, sensor_id, last_log):
                 'Sensorid': sensor_id
             })
 
-    return [
-        attendances,
-        conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
-    ]
+    current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
+    conn.disconnect()
+
+    return [attendances, current_machine_time]
 
 # Main logic
 try:
@@ -71,10 +71,10 @@ try:
 
         last_log = list_of_last_log[index]
 
-        [attendances, machine_time] = upload_punches(IP, sensor_id, last_log)
+        [attendances, current_machine_time] = upload_punches(IP, sensor_id, last_log)
         total_data += attendances
 
-        logs.append(machine_time)
+        logs.append(current_machine_time)
 
 
     if not total_data:
@@ -116,7 +116,3 @@ except Exception as error:
     ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
 
     print ("Process terminate : {}".format(error))
-
-finally:
-    if conn:
-        conn.disconnect()
