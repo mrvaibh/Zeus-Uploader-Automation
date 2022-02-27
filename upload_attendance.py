@@ -8,31 +8,39 @@ def upload_punches(IP, sensor_id, last_log):
     # create ZK instance
     zk = ZK(IP, port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
 
-    # connect to device
-    conn = zk.connect()
+    try:
+        # connect to device
+        conn = zk.connect()
 
-    attendances = []
+        attendances = []
 
-    for attendance in conn.get_attendance():
-        if attendance is None:
-            continue
+        for attendance in conn.get_attendance():
+            if attendance is None:
+                continue
 
-        try:
-            last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
-        except:
-            last_attendance_time_obj = datetime.strptime('01-01-1990 00:00:00', '%d-%m-%Y %H:%M:%S')
+            try:
+                last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
+            except:
+                last_attendance_time_obj = datetime.strptime('01-01-1990 00:00:00', '%d-%m-%Y %H:%M:%S')
 
-        if attendance.timestamp >= last_attendance_time_obj:
-            attendances.append({
-                'Badgenumber': attendance.user_id.zfill(5),
-                'blank1': '',
-                'Checktime': datetime.strftime(attendance.timestamp, '%d-%m-%Y %H:%M'),
-                'blank2': '',
-                'Sensorid': sensor_id
-            })
-
-    current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
-    conn.disconnect()
+            if attendance.timestamp >= last_attendance_time_obj:
+                attendances.append({
+                    'Badgenumber': attendance.user_id.zfill(5),
+                    'blank1': '',
+                    'Checktime': datetime.strftime(attendance.timestamp, '%d-%m-%Y %H:%M'),
+                    'blank2': '',
+                    'Sensorid': sensor_id
+                })
+        
+        current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
+        
+    except Exception as error:
+        attendances = []
+        current_machine_time = last_log
+    
+    finally:
+        if conn:
+            conn.disconnect()
 
     return [attendances, current_machine_time]
 
