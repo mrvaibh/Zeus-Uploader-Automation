@@ -1,7 +1,8 @@
-import os, sys, requests, csv
+import os, sys, requests, csv, webbrowser
 from datetime import datetime
 from zk import ZK, const
 
+os.chdir('__VENDORS')
 
 def upload_punches(IP, sensor_id, last_log):
     conn = None
@@ -113,6 +114,10 @@ try:
 
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
+
+    # open machine_status file in the default web browser
+    url = os.path.abspath("machine_status.html")
+    webbrowser.open(url, new=2)
 
     if not total_data:
         print('No new punches found')
