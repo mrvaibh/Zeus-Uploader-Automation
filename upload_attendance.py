@@ -36,19 +36,24 @@ def upload_punches(IP, sensor_id, last_log):
 
     return [attendances, current_machine_time]
 
-# Main logic
+
+
+# Code starts here
 try:
     SERVER_URL = 'http://demo.zeustech.in:8082/webapi/checkInOut/punchin'
 
+    # setting up configurations
     if os.path.exists('config.zeus'):
         with open('config.zeus', 'r') as file:
             lines = file.read().splitlines()
 
             SERVER_URL = lines[0]
 
+    # open and get machine list
     file = open('machine_list', 'r')
     machine_list = file.read().splitlines()
     file.close()
+
 
     # create log file if doesn't exist
     if not os.path.exists('logs.csv'):
@@ -57,15 +62,18 @@ try:
             csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
             csv_writer.writerow(IP_list)
 
+
+    # open log file and getting last row
     with open('logs.csv', 'r') as log_file:
         data = log_file.readlines()
-
     list_of_last_log = data[-1].replace('\n', '').split(',')
+
 
     total_data = []
     logs = []
 
     # Fetching data from all machines one by one
+    # and appending to `total_data`
     for (index, each_line) in enumerate(machine_list):
         [IP, sensor_id] = each_line.split(',')
 
@@ -82,6 +90,7 @@ try:
         exit()
 
     print(f'Total {len(total_data)} punches found')
+
 
     # creating CSV out of `total_data`
     with open('mytable.csv', 'w') as csv_file:
