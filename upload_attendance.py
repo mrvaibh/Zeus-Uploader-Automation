@@ -1,8 +1,17 @@
 import os, sys, requests, csv, webbrowser
 from datetime import datetime
-from zk import ZK, const
+from zk import ZK
 
 os.chdir('__VENDORS')
+
+def log_errors():
+    exc_type, exc_obj, exc_tb = sys.exc_info()
+
+    with open('error_log.txt', 'a') as error_log:
+        error_log.write(f'''[ {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} ]
+    ===ERROR=== {str(error)}
+    ===TYPE=== {str(exc_type)}
+    ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
 
 def upload_punches(IP, sensor_id, last_log):
     conn = None
@@ -36,7 +45,8 @@ def upload_punches(IP, sensor_id, last_log):
         current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
         machine_status = True
 
-    except Exception as error:
+    except:
+        log_errors()
 
         attendances = []
         try:
@@ -148,14 +158,6 @@ try:
         csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
         csv_writer.writerow(logs)
 
-
 except Exception as error:
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-
-    with open('error_log.txt', 'a') as error_log:
-        error_log.write(f'''[ {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} ]
-    ===ERROR=== {str(error)}
-    ===TYPE=== {str(exc_type)}
-    ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
-
+    log_errors()
     print ("Process terminate : {}".format(error))
