@@ -22,3 +22,10 @@ __Note: MID must me unique and always the same once created__
 
 ## Cron
  - Make use if `script.bat` to setup CRON
+
+## Build (for windows)
+ - `pyinstaller --icon=logo.ico --add-data "logo.ico;." .\upload_attendance.py --hidden-import zk`
+ - Copy and setup `config.zeus`, `machine_list`
+
+## Troubleshoot
+Delete the `logs.csv` file and try again

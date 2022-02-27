@@ -108,9 +108,9 @@ try:
         logs.append(returned_data['current_machine_time'])
 
         if returned_data['machine_status']:
-            machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK</h2>\n'''
+            machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
         else:
-            machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN</h2>\n'''
+            machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
 
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
