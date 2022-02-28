@@ -46,7 +46,7 @@ try:
             machines_status_html = '<h1>Last Updated: NEVER</h1><hr>'
 
     # Checking status of all machines one by one
-    for (index, each_line) in enumerate(machine_list):
+    for each_line in machine_list:
         IP = each_line.split(',')[0]
 
         returned_data = get_status(IP)
