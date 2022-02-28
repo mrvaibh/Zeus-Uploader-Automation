@@ -16,7 +16,7 @@ def log_errors():
 def upload_punches(IP, sensor_id, last_log):
     conn = None
     # create ZK instance
-    zk = ZK(IP, port=4370, timeout=5, password=0, force_udp=False, ommit_ping=False)
+    zk = ZK(IP, port=4370, timeout=60, password=0, force_udp=False, ommit_ping=False)
 
     try:
         # connect to device
@@ -72,7 +72,7 @@ def upload_punches(IP, sensor_id, last_log):
 
 # Code starts here
 try:
-    SERVER_URL = 'http://demo.zeustech.in:8082/webapi/checkInOut/punchin'
+    SERVER_URL = 'http://demo.zeustech.in:8082/webapi/checkInOut/file/upload'
 
     # setting up configurations
     if os.path.exists('config.zeus'):
@@ -146,7 +146,7 @@ try:
     # send entire data to the server at once
     with open('mytable.csv', 'r') as csv_file:
         data = csv_file.read()
-        response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'})
+        response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
         print("Data uploaded. Response status:", response.status_code)
 
     # Deleting the file immediately
