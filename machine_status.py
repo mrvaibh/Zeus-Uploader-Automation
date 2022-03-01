@@ -39,6 +39,7 @@ try:
     machine_list = file.read().splitlines()
     file.close()
 
+    # Write first line of HTML
     if os.path.exists('machine_status.html'):
         with open('machine_status.html') as html_file:
             machines_status_html = html_file.readline()
@@ -56,6 +57,7 @@ try:
         else:
             machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
 
+    # Write entire HTML
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
 

@@ -4,7 +4,7 @@ from zk import ZK
 
 os.chdir('__VENDORS')
 
-def log_errors():
+def log_errors(error):
     exc_type, exc_obj, exc_tb = sys.exc_info()
 
     with open('error_log.txt', 'a') as error_log:
@@ -12,6 +12,7 @@ def log_errors():
     ===ERROR=== {str(error)}
     ===TYPE=== {str(exc_type)}
     ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
+    print ("Process terminate : {}".format(error))
 
 def upload_punches(IP, sensor_id, last_log):
     conn = None
@@ -45,8 +46,8 @@ def upload_punches(IP, sensor_id, last_log):
         current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
         machine_status = True
 
-    except:
-        log_errors()
+    except Exception as error:
+        log_errors(error)
 
         attendances = []
         try:
@@ -57,6 +58,7 @@ def upload_punches(IP, sensor_id, last_log):
             current_machine_time = '01-01-1990 00:00:00'
 
         machine_status = False
+        print ("Error in upload_punch() : {}".format(error))
 
     finally:
         if conn:
@@ -159,5 +161,4 @@ try:
         csv_writer.writerow(logs)
 
 except Exception as error:
-    log_errors()
-    print ("Process terminate : {}".format(error))
+    log_errors(error)
