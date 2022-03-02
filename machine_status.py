@@ -44,7 +44,7 @@ try:
         with open('machine_status.html') as html_file:
             machines_status_html = html_file.readline()
     else:
-            machines_status_html = '<h1>Last Updated: NEVER</h1><hr>'
+            machines_status_html = '<h1>Last Updated: NEVER</h1><hr>\n'
 
     # Checking status of all machines one by one
     for each_line in machine_list:

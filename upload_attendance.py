@@ -105,7 +105,7 @@ try:
 
     total_data = []
     logs = []
-    machines_status_html = '<h1>Last Updated: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + '</h1><hr>'
+    machines_status_html = '<h1>Last Updated: ' + datetime.now().strftime('%d/%m/%Y, %H:%M:%S') + '</h1><hr>\n'
 
     # Fetching data from all machines one by one
     # and appending to `total_data`
