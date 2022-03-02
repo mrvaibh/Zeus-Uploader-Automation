@@ -4,7 +4,7 @@ from zk import ZK
 
 os.chdir('__VENDORS')
 
-def log_errors():
+def log_errors(error):
     exc_type, exc_obj, exc_tb = sys.exc_info()
 
     with open('error_log.txt', 'a') as error_log:
@@ -22,8 +22,8 @@ def get_status(IP):
         # connect to device
         conn = zk.connect()
         machine_status = True
-    except:
-        log_errors()
+    except Exception as error:
+        log_errors(error)
         machine_status = False
     finally:
         if conn:
@@ -66,5 +66,5 @@ try:
     webbrowser.open(url, new=2)
 
 except Exception as error:
-    log_errors()
+    log_errors(error)
     print ("Process terminate : {}".format(error))
