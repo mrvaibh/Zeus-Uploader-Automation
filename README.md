@@ -19,7 +19,7 @@
 192.168.88.205,15
 ```
 __Note: MID must me unique and always the same once created__
- - create `config.zeus` and add URL of server endpoint. For example: `http://demo.zeustech.in:8082/webapi/checkInOut/punchin`
+ - create `config.zeus` and add URL of server endpoint. For example: `http://demo.zeustech.in:8082/webapi/checkInOut/file/upload`
 
 ## Cron
  - Make use of `script.bat` to setup CRON
