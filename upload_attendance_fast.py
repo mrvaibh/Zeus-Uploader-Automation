@@ -30,11 +30,11 @@ def upload_punches(IP, sensor_id, last_log):
 
         all_attendances = conn.get_attendance()
 
-        # Performing binary search to get 
+        # Performing binary search to avoid thousands of redundant checks
         start, end = 0, len(all_attendances) - 1
         pointer = (start + end) // 2
 
-        while start < end:
+        while start <= end:
             prev_timestamp_obj = all_attendances[pointer - 1]['timestamp']
             timestamp_obj = all_attendances[pointer]['timestamp']
             next_timestamp_obj = all_attendances[pointer + 1]['timestamp']
@@ -50,7 +50,10 @@ def upload_punches(IP, sensor_id, last_log):
                 else:
                     pointer += 1 # so as to get next timestamp, which is the correct one
                     break
+            
+            pointer = (start + end) // 2
 
+        # Extracting only required keys
         attendances = []
 
         for attendance in all_attendances[pointer:]:
