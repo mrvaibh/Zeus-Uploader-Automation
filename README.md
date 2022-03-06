@@ -24,7 +24,8 @@
 
 ## Cron
  - Make use of `script.bat` to setup CRON
- - check Run with Highest Privilage, and nothing else.
+ - check "Run with Highest Privilage"
+ - uncheck "Start the task only if the computer is on AC power"
 
 ## Build (for windows)
  - `pyinstaller --icon=logo.ico --add-data "logo.ico;." .\upload_attendance.py --hidden-import zk`
