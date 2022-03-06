@@ -20,11 +20,11 @@
     ```
     __Note: MID must me unique and always the same once created__
  - create `config.zeus` and add URL of server endpoint. For example: `http://demo.zeustech.in:8082/webapi/checkInOut/file/upload`
- - update the <ABSOLUTE_PATH_TO_DIR> in first line of `script.bat`
+ - update the <ABSOLUTE_PATH_TO_DIR> and <ABSOLUTE_PATH_TO_PYTHON> in `script.bat` file
 
 ## Cron
  - Make use of `script.bat` to setup CRON
- - https://www.geeksforgeeks.org/schedule-a-python-script-to-run-daily/
+ - check Run with Highest Privilage, and nothing else.
 
 ## Build (for windows)
  - `pyinstaller --icon=logo.ico --add-data "logo.ico;." .\upload_attendance.py --hidden-import zk`
