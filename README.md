@@ -24,6 +24,7 @@
 
 ## Cron
  - Make use of `script.bat` to setup CRON
+ - https://www.geeksforgeeks.org/schedule-a-python-script-to-run-daily/
 
 ## Build (for windows)
  - `pyinstaller --icon=logo.ico --add-data "logo.ico;." .\upload_attendance.py --hidden-import zk`

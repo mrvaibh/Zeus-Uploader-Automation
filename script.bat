@@ -1,2 +1,2 @@
-cd <ABSOLUTE_PATH_TO_DIR>
-python upload_attendance.py
+cd /d "E:\auto-attendance-uploader"
+C:\Users\Vinod\AppData\Local\Programs\Python\Python37-32\python.exe E:\auto-attendance-uploader\upload_attendance.py
