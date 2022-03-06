@@ -1,11 +1,11 @@
 # Zeus-Uploader-Automation
 
 ## Setup
-### PIPENV (recommended)
+### For Development
  - `pip install pipenv`
  - `pipenv shell`
  - `pipenv install`
-### Globally
+### For Production
  - `pip install -r requirements.txt`
 
 ## Usage
