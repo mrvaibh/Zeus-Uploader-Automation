@@ -146,6 +146,7 @@ try:
 
 
     # send entire data to the server at once
+    response = None
     with open('mytable.csv', 'r') as csv_file:
         data = csv_file.read()
         response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
@@ -155,10 +156,11 @@ try:
     os.remove('mytable.csv')
 
 
-    # append logs
-    with open('logs.csv', 'a') as csv_file:
-        csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
-        csv_writer.writerow(logs)
+    # append logs if 200 from server
+    if response.status_code == 200:
+        with open('logs.csv', 'a') as csv_file:
+            csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
+            csv_writer.writerow(logs)
 
 except Exception as error:
     log_errors(error)
