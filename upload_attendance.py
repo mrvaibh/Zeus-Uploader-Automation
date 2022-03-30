@@ -2,6 +2,7 @@ import os, sys, requests, csv, webbrowser
 from datetime import datetime
 from zk import ZK
 
+os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
 def log_errors(error):

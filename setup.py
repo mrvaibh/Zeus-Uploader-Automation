@@ -35,14 +35,17 @@ with open('script.bat', 'w') as file:
     file.write(content)
 
 
-# WINDOWS CRON JOB
+# WINDOWS CRON JOBS
 print('==== Setting up CRON JOB ====\n')
 print('Your attendances will be uploaded automatically everyday')
 print('(Enter time in railway format [HH:MM])\n')
 
 cron_runtime = input('Run Daily at: ')
-CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\script.bat" /ST {cron_runtime}'
-os.system(CRON_CMD)
+CRON_CMD_1 = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\script.bat" /ST {cron_runtime}'
+CRON_CMD_2 = f'SCHTASKS /CREATE /SC ONSTART /TN "ZEUSTECH\\update-auto-attendance" /TR "{CURRENT_ABSOLUTE_PATH}\update.pyw"'
+os.system(CRON_CMD_1)
+os.system(CRON_CMD_2)
+
 
 os.system('cls')
 

@@ -1,5 +1,7 @@
 import os, requests
 
+os.chdir(os.path.dirname(__file__))
+
 BASE_URL = 'https://raw.githubusercontent.com/mrvaibh/Zeus-Uploader-Automation/main/'
 
 response = requests.get(BASE_URL + 'RELEASE')
