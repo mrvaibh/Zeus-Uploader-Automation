@@ -29,10 +29,15 @@ def update_file(filename):
     # compile .py to .pyc
     if filename[-3:] == '.py':
         os.system(f'python -m compileall -b {filename}')
+
+        # EXCEPTIONAL CASE FOR UPDATE.PYC
+        if filename == 'update.py':
+            os.rename('update.pyc', 'update.pyw')
+
         os.remove(filename)
 
 update_file('upload_attendance.py')
 update_file('upload_attendance_fast.py')
 update_file('machine_status.py')
-update_file('update.pyw')
 update_file('RELEASE')
+update_file('update.py')
