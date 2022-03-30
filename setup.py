@@ -33,12 +33,12 @@ print('==== Creating Executable Script ====')
 with open('script.bat', 'w') as file:
     content = f'''cd /d "{CURRENT_ABSOLUTE_PATH}"\n{PYTHON_ABSOLUTE_PATH} {CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc'''
     file.write(content)
+os.system('cls')
 
 
 # WINDOWS CRON JOBS
 print('==== Setting up CRON JOB ====\n')
-print('Your attendances will be uploaded automatically everyday')
-print('(Enter time in railway format [HH:MM])\n')
+print('Enter time in railway format - HH:MM\n')
 
 cron_runtime = input('Run Daily at: ')
 CRON_CMD_1 = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc" /ST {cron_runtime}'
