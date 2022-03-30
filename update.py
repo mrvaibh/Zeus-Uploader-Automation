@@ -20,7 +20,6 @@ def update_file(filename):
     # getting latest content from API
     response = requests.get(BASE_URL + filename)
     latest_file_content = response.content.decode()
-    print(latest_file_content)
     
     # writing into .py file
     with open(filename, 'w') as file:
