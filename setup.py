@@ -41,7 +41,7 @@ print('Your attendances will be uploaded automatically everyday')
 print('(Enter time in railway format [HH:MM])\n')
 
 cron_runtime = input('Run Daily at: ')
-CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUS\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\APP-OR-SCRIPT" /ST {cron_runtime}'
+CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUS\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\script.bat" /ST {cron_runtime}'
 os.system(CRON_CMD)
 
 os.system('cls')

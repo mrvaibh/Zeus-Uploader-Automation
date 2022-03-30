@@ -32,5 +32,5 @@ def update_file(filename):
 update_file('upload_attendance.py')
 update_file('upload_attendance_fast.py')
 update_file('machine_status.py')
-update_file('update.py')
+update_file('update.pyw')
 update_file('RELEASE')
