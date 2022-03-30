@@ -20,7 +20,7 @@ no_of_machines = int(input('\nTotal Number of Machines: '))
 print('\nType machine IP and number like this "192.168.1.2,12"')
 
 machine_file_content = ''
-for i in no_of_machines:
+for i in range(1, no_of_machines+1):
     machine_file_content += input(f'Machine {i}: ') + '\n'
 
 with open('__VENDORS/machine_list', 'w') as file:
