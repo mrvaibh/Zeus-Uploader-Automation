@@ -51,3 +51,6 @@ os.system('cls')
 
 print('Setup is successfully completed!\n')
 os.system('pause')
+
+if os.path.exists('update.py'):
+    os.system(f'{CURRENT_ABSOLUTE_PATH}\update.py')
