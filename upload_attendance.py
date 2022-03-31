@@ -2,8 +2,6 @@ import os, sys, requests, csv, webbrowser
 from datetime import datetime
 from zk import ZK
 
-print("testing line")
-
 os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
@@ -18,6 +16,7 @@ def log_errors(error):
     print ("Process terminate : {}".format(error))
 
 def upload_punches(IP, sensor_id, last_log):
+    print('Attempting Machine: ', IP)
     conn = None
     # create ZK instance
     zk = ZK(IP, port=4370, timeout=60, password=0, force_udp=False, ommit_ping=False)

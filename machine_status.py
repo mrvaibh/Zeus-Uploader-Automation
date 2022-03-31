@@ -14,6 +14,7 @@ def log_errors(error):
     ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
 
 def get_status(IP):
+    print('Attempting Machine: ', IP)
     conn = None
     # create ZK instance
     zk = ZK(IP, port=4370, timeout=60, password=0, force_udp=False, ommit_ping=False)
@@ -44,7 +45,7 @@ try:
         with open('machine_status.html') as html_file:
             machines_status_html = html_file.readline()
     else:
-            machines_status_html = '<h1>Last Updated: NEVER</h1><hr>\n'
+        machines_status_html = '<h1>Last Updated: NEVER</h1><hr>\n'
 
     # Checking status of all machines one by one
     for each_line in machine_list:
@@ -58,10 +59,12 @@ try:
             machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
 
     # Write entire HTML
+    print('Writing status file...')
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
 
     # open machine_status file in the default web browser
+    print('Opening in browser')
     url = os.path.abspath("machine_status.html")
     webbrowser.open(url, new=2)
 

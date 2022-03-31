@@ -20,7 +20,7 @@ def update_file(filename):
     # getting latest content from API
     response = requests.get(BASE_URL + filename)
     latest_file_content = response.content.decode()
-    
+
     # writing into .py file
     with open(filename, 'w') as file:
         file.write(latest_file_content)
@@ -28,11 +28,11 @@ def update_file(filename):
     # compile .py to .pyc
     if filename[-3:] == '.py':
         os.system(f'python -m compileall -b {filename}')
-
         os.remove(filename)
 
 update_file('upload_attendance.py')
 update_file('upload_attendance_fast.py')
 update_file('machine_status.py')
+update_file('setup.py')
 update_file('RELEASE')
 update_file('update.py')
