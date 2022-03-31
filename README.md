@@ -9,27 +9,19 @@
  - `pip install -r requirements.txt`
 
 ## Usage
- - change directory to `./__VENDORS`
- - create a file `machine_list` and add IP and Machine ID per line. For example:
-     ```
-    192.168.88.201,11
-    192.168.88.202,12
-    192.168.88.203,13
-    192.168.88.204,14
-    192.168.88.205,15
-    ```
-    __Note: MID must me unique and always the same once created__
- - create `config.zeus` and add URL of server endpoint. For example: `http://demo.zeustech.in:8082/webapi/checkInOut/file/upload`
- - update the <ABSOLUTE_PATH_TO_DIR> and <ABSOLUTE_PATH_TO_PYTHON> in `script.bat` file
-
-## Cron
- - Make use of `script.bat` to setup CRON
- - check "Run with Highest Privilage"
- - uncheck "Start the task only if the computer is on AC power"
-
-## Build (for windows)
- - `pyinstaller --icon=logo.ico --add-data "logo.ico;." .\upload_attendance.py --hidden-import zk`
- - Copy and setup `config.zeus`, `machine_list`
+### Setting Up
+ - run `setup.py`
+ - enter SERVER NAME, MACHINE INFO, and TIME when to run task daily
+### Set Auto-Update
+ - Copy `update.py`
+ - press `Win+R`, type `shell:startup`
+ - press `Ctrl+Shift+V`
+### Set CRON
+ - Goto start, search `Task Scheduler`
+ - In the left pane, expand `Task Scheduler Library`, and select `ZEUSTECH`
+ - In the right pane, click on `Properties`
+ - CHECK `Run with highest privilages`
+ - Goto `Conditions` tab, UNCHECK `Start the task only if the computer is on AC power`
 
 ## Troubleshoot
 Delete the `logs.csv` file and try again in case of anonymous errors.
