@@ -2,6 +2,8 @@ import os, sys, requests, csv, webbrowser
 from datetime import datetime
 from zk import ZK
 
+print("testing line")
+
 os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
