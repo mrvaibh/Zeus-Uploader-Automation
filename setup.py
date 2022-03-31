@@ -47,9 +47,7 @@ os.system(CRON_CMD_1)
 os.system(CRON_CMD_2)
 
 
-os.system('cls')
-
-print('Setup is successfully completed!\n')
+print('\nSetup is successfully completed!\n')
 os.system('pause')
 
 if os.path.exists('update.py'):

@@ -26,14 +26,8 @@ def update_file(filename):
         file.write(latest_file_content)
     
     # compile .py to .pyc
-    print(filename)
-    print(filename[-3:])
     if filename[-3:] == '.py':
         os.system(f'python -m compileall -b {filename}')
-
-        # EXCEPTIONAL CASE FOR UPDATE.PYC
-        if filename == 'update.py':
-            os.rename('update.pyc', 'update.pyw')
 
         os.remove(filename)
 
