@@ -12,12 +12,13 @@ os.system('cls')
 # CONFIG.ZEUS
 with open('__VENDORS/config.zeus', 'w') as file:
     server_name = input('\nSERVER NAME: ')
-    file.write(f'https://{server_name}.zeustech.in/webapi/checkInOut/file/upload')
+    port_number = 8500 if server_name == 'demo' else 443
+    file.write(f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload')
 
 
 # MACHINE_LIST
 no_of_machines = int(input('\nTotal Number of Machines: '))
-print('\nType machine IP and number like this "192.168.1.2,12"')
+print('\nType machine IP and number like this "192.168.88.201,12"')
 
 machine_file_content = ''
 for i in range(1, no_of_machines+1):
@@ -41,14 +42,16 @@ print('==== Setting up CRON JOB ====\n')
 print('Enter time in railway format - HH:MM\n')
 
 cron_runtime = input('Run Daily at: ')
-CRON_CMD_1 = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc" /ST {cron_runtime}'
-CRON_CMD_2 = f'SCHTASKS /CREATE /SC ONSTART /TN "ZEUSTECH\\update-auto-attendance" /TR "{CURRENT_ABSOLUTE_PATH}\\update.pyc"'
-os.system(CRON_CMD_1)
-os.system(CRON_CMD_2)
+CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc" /ST {cron_runtime}'
+os.system(CRON_CMD)
+
+
+# Run update
+if os.path.exists('update.py'):
+    os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.py')
+elif os.path.exists('update.pyc'):
+    os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.pyc')
 
 
 print('\nSetup is successfully completed!\n')
 os.system('pause')
-
-if os.path.exists('update.py'):
-    os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.py')

@@ -12,8 +12,8 @@ local_version = None
 with open('RELEASE') as file:
     local_version = file.readline()
 
-# if latest_version == local_version:
-#     exit()
+if latest_version == local_version:
+    exit()
 
 
 def update_file(filename):
