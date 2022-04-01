@@ -98,7 +98,10 @@ def upload_punches(IP, sensor_id, last_log):
 
 # Code starts here
 try:
-    SERVER_URL = 'http://demo.zeustech.in:8082/webapi/checkInOut/file/upload'
+    MAX_RETRIES = 5
+    TIME_DELAY_FACTOR = 2
+
+    SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 
     # setting up configurations
     if os.path.exists('config.zeus'):
@@ -134,19 +137,31 @@ try:
     # Fetching data from all machines one by one
     # and appending to `total_data`
     for (index, each_line) in enumerate(machine_list):
-        [IP, sensor_id] = each_line.split(',')
+        retries = 0
+        
+        while retries < MAX_RETRIES:
+            try:
+                # Taking break before starting connection
+                time.sleep(TIME_DELAY_FACTOR ** retries)
 
-        last_log = list_of_last_log[index]
+                [IP, sensor_id] = each_line.split(',')
+                
+                print(f'Machine: {IP} -- Attempt {retries + 1}/{MAX_RETRIES}')
 
-        returned_data = upload_punches(IP, sensor_id, last_log)
-        total_data += returned_data['attendances']
+                last_log = list_of_last_log[index]
 
-        logs.append(returned_data['current_machine_time'])
+                returned_data = upload_punches(IP, sensor_id, last_log)
+                total_data += returned_data['attendances']
 
-        if returned_data['machine_status']:
-            machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
-        else:
-            machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
+                logs.append(returned_data['current_machine_time'])
+
+                if returned_data['machine_status']:
+                    machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
+                else:
+                    machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
+                break
+            except:
+                retries += 1
 
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
@@ -170,11 +185,19 @@ try:
 
 
     # send entire data to the server at once
-    response = None
-    with open('mytable.csv', 'r') as csv_file:
-        data = csv_file.read()
-        response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
-        print("Data uploaded. Response status:", response.status_code)
+    retries = 0
+    while retries <= MAX_RETRIES:
+        try:
+            time.sleep(TIME_DELAY_FACTOR ** retries)
+
+            response = None
+            with open('mytable.csv', 'r') as csv_file:
+                data = csv_file.read()
+                response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
+                print("Data uploaded. Response status:", response.status_code)
+            break
+        except:
+            retries += 1
 
     # Deleting the file immediately
     os.remove('mytable.csv')
