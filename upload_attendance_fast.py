@@ -82,7 +82,7 @@ def upload_punches(IP, sensor_id, last_log):
             current_machine_time = '01-01-1990 00:00:00'
 
         machine_status = False
-        print ("Error in upload_punch() : {}".format(error))
+        raise ("Error in upload_punch() : {}".format(error))
 
     finally:
         if conn:
