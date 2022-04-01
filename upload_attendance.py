@@ -163,11 +163,11 @@ try:
 
     # send entire data to the server at once
     retries = 0
+    response = None
     while retries <= MAX_RETRIES:
         try:
             time.sleep(TIME_DELAY_FACTOR ** retries)
 
-            response = None
             with open('mytable.csv', 'r') as csv_file:
                 data = csv_file.read()
                 response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
