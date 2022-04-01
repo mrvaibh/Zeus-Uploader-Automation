@@ -1,4 +1,4 @@
-import os, sys, requests, csv, webbrowser
+import os, sys, requests, csv, webbrowser, time
 from datetime import datetime
 from zk import ZK
 
