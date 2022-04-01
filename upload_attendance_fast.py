@@ -16,7 +16,6 @@ def log_errors(error):
     print ("Process terminate : {}".format(error))
 
 def upload_punches(IP, sensor_id, last_log):
-    print('Attempting Machine: ', IP)
     conn = None
     # create ZK instance
     zk = ZK(IP, port=4370, timeout=60, password=0, force_udp=False, ommit_ping=False)
@@ -126,8 +125,8 @@ try:
 
     # open log file and getting last row
     with open('logs.csv', 'r') as log_file:
-        data = log_file.readlines()
-    list_of_last_log = data[-1].replace('\n', '').split(',')
+        last_row = log_file.readlines()[-1]
+    list_of_last_log = last_row.replace('\n', '').split(',')
 
 
     total_data = []
