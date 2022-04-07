@@ -46,6 +46,7 @@ def upload_punches(IP, sensor_id, last_log):
 
         current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
         machine_status = True
+        exceptional_error = None
 
     except Exception as error:
         log_errors(error)
@@ -59,13 +60,15 @@ def upload_punches(IP, sensor_id, last_log):
             current_machine_time = '01-01-1990 00:00:00'
 
         machine_status = False
-        raise ("Error in upload_punch() : {}".format(error))
+        exceptional_error = error
 
     finally:
         if conn:
             conn.disconnect()
 
     return {
+        'conn': conn,
+        'exceptional_error': exceptional_error,
         'attendances': attendances,
         'current_machine_time': current_machine_time,
         'machine_status': machine_status,
@@ -86,6 +89,8 @@ try:
             lines = file.read().splitlines()
 
             SERVER_URL = lines[0]
+            MAX_RETRIES = int(lines[1])
+            TIME_DELAY_FACTOR = int(lines[2])
 
     # open and get machine list
     file = open('machine_list', 'r')
@@ -115,30 +120,38 @@ try:
     # and appending to `total_data`
     for (index, each_line) in enumerate(machine_list):
         retries = 0
+
+        [IP, sensor_id] = each_line.split(',')
+
+        last_log = list_of_last_log[index]
+        machine_status = None
         
         while retries < MAX_RETRIES:
             try:
                 # Taking break before starting connection
                 time.sleep(TIME_DELAY_FACTOR ** retries)
-
-                [IP, sensor_id] = each_line.split(',')
                 
                 print(f'Machine: {IP} -- Attempt {retries + 1}/{MAX_RETRIES}')
 
-                last_log = list_of_last_log[index]
-
                 returned_data = upload_punches(IP, sensor_id, last_log)
+
+                last_log = returned_data['current_machine_time']
+                machine_status = returned_data['machine_status']
+
+                if not returned_data['conn']:
+                    raise Exception("Error in upload_punch() : {}".format(returned_data['exceptional_error']))
+
                 total_data += returned_data['attendances']
-
-                logs.append(returned_data['current_machine_time'])
-
-                if returned_data['machine_status']:
-                    machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
-                else:
-                    machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
                 break
-            except:
+            except Exception as e:
                 retries += 1
+        
+        logs.append(last_log)
+
+        if machine_status:
+            machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
+        else:
+            machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
 
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
