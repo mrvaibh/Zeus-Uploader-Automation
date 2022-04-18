@@ -12,7 +12,7 @@ local_version = None
 with open('RELEASE') as file:
     local_version = file.readline()
 
-if latest_version == local_version:
+if __name__ == '__main__' and latest_version == local_version:
     exit()
 
 
@@ -30,9 +30,18 @@ def update_file(filename):
         os.system(f'python -m compileall -b {filename}')
         os.remove(filename)
 
-update_file('upload_attendance.py')
-update_file('upload_attendance_fast.py')
-update_file('machine_status.py')
-update_file('setup.py')
-update_file('RELEASE')
-update_file('update.py')
+FILES_TO_UPDATE = [
+    'upload_attendance.py',
+    'upload_attendance_fast.py',
+    'machine_status.py',
+    'setup.py',
+    'RELEASE',
+    'update.py',
+]
+
+def main():
+    for file in FILES_TO_UPDATE:
+        update_file(file)
+
+if __name__ == '__main__':
+    main()
