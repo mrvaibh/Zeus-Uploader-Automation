@@ -48,8 +48,11 @@ os.system(CRON_CMD)
 
 # Run update
 if os.path.exists('update.py'):
-    os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.py')
+    # While first setup run
+    from update import main
+    main()
 elif os.path.exists('update.pyc'):
+    # everytime else then the setup is run
     os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.pyc')
 
 
