@@ -13,8 +13,18 @@ os.system('cls')
 with open('__VENDORS/config.zeus', 'w') as file:
     server_name = input('\nSERVER NAME: ')
     port_number = 8500 if server_name == 'demo' else 443
-    file.write(f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload')
 
+    max_retries = input('Max retires (default: 5) : ') or '5'
+    time_delay = input('Time delay in sec (default: 2): ') or '2'
+
+    cron_runtime = input('Run Daily at: ') + ',' + input('Run every how many hrs? (leave blank if NA): ')
+
+    file.writelines([
+        f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload' + '\n',
+        max_retries + '\n',
+        time_delay + '\n',
+        cron_runtime
+    ])
 
 # MACHINE_LIST
 no_of_machines = int(input('\nTotal Number of Machines: '))
@@ -36,20 +46,10 @@ with open('script.bat', 'w') as file:
     file.write(content)
 os.system('cls')
 
-
-# WINDOWS CRON JOBS
-print('==== Setting up CRON JOB ====\n')
-print('Enter time in railway format - HH:MM\n')
-
-cron_runtime = input('Run Daily at: ')
-CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.py" /ST {cron_runtime}'
-os.system(CRON_CMD)
-
-
-# Run update
-if os.path.exists('update.py'):
+# Run startup functions
+if os.path.exists('startup.py'):
     # While first setup run
-    from update import main
+    from startup import main
     main()
 
 

@@ -108,6 +108,10 @@ try:
             lines = file.read().splitlines()
 
             SERVER_URL = lines[0]
+            
+            if not len(lines) > 1:
+                MAX_RETRIES = int(lines[1])
+                TIME_DELAY_FACTOR = int(lines[2])
 
     # open and get machine list
     file = open('machine_list', 'r')
@@ -161,7 +165,9 @@ try:
                 break
             except:
                 retries += 1
-
+    
+    
+    # writing machine_status.html
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
 
