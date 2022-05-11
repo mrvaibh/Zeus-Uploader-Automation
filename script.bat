@@ -1,2 +1,2 @@
 cd /d "<ABSOLUTE_PATH_TO_DIR>"
-<ABSOLUTE_PATH_TO_PYTHON> <ABSOLUTE_PATH_TO_DIR>\upload_attendance.pyc
+<ABSOLUTE_PATH_TO_PYTHON> <ABSOLUTE_PATH_TO_DIR>\upload_attendance.py
