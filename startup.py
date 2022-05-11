@@ -23,6 +23,7 @@ def needs_update():
 
 def update_file(filename):
     # getting latest content from API
+    print(f'Updating {filename}...')
     response = requests.get(BASE_URL + filename)
     latest_file_content = response.content.decode()
 

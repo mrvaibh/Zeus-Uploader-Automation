@@ -11,9 +11,9 @@
 ## Usage
 ### Setting Up
  - run `setup.py`
- - enter SERVER NAME, MACHINE INFO, and TIME when to run task daily
-### Set Auto-Update
- - Copy `update.py`
+ - enter SERVER NAME, MAX RETRIES, TIME DELAY, SCHEDULED TIME and MACHINE INFO
+### Set on startup
+ - Copy `startup.py`
  - press `Win+R`, type `shell:startup`
  - press `Ctrl+Shift+V`
 ### Set CRON
