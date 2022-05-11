@@ -16,12 +16,6 @@
  - Copy `startup.py`
  - press `Win+R`, type `shell:startup`
  - press `Ctrl+Shift+V`
-### Set CRON
- - Goto start, search `Task Scheduler`
- - In the left pane, expand `Task Scheduler Library`, and select `ZEUSTECH` folder
- - In the right pane, click on `Properties`
- - CHECK `Run with highest privilages`
- - Goto `Conditions` tab, UNCHECK `Start the task only if the computer is on AC power`
 
 ## Troubleshoot
 Delete the `logs.csv` file and try again in case of anonymous errors.
