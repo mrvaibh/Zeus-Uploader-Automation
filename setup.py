@@ -32,7 +32,7 @@ os.system('cls')
 # SCRIPT.BAT
 print('==== Creating Executable Script ====')
 with open('script.bat', 'w') as file:
-    content = f'''cd /d "{CURRENT_ABSOLUTE_PATH}"\n{PYTHON_ABSOLUTE_PATH} {CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc'''
+    content = f'''cd /d "{CURRENT_ABSOLUTE_PATH}"\n{PYTHON_ABSOLUTE_PATH} {CURRENT_ABSOLUTE_PATH}\\upload_attendance.py'''
     file.write(content)
 os.system('cls')
 
@@ -42,7 +42,7 @@ print('==== Setting up CRON JOB ====\n')
 print('Enter time in railway format - HH:MM\n')
 
 cron_runtime = input('Run Daily at: ')
-CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.pyc" /ST {cron_runtime}'
+CRON_CMD = f'SCHTASKS /CREATE /SC DAILY /TN "ZEUSTECH\\auto-attendance-scheduler" /TR "{CURRENT_ABSOLUTE_PATH}\\upload_attendance.py" /ST {cron_runtime}'
 os.system(CRON_CMD)
 
 
@@ -51,9 +51,6 @@ if os.path.exists('update.py'):
     # While first setup run
     from update import main
     main()
-elif os.path.exists('update.pyc'):
-    # everytime else then the setup is run
-    os.system(f'{CURRENT_ABSOLUTE_PATH}\\update.pyc')
 
 
 print('\nSetup is successfully completed!\n')

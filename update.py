@@ -24,11 +24,6 @@ def update_file(filename):
     # writing into .py file
     with open(filename, 'w') as file:
         file.write(latest_file_content)
-    
-    # compile .py to .pyc
-    if filename[-3:] == '.py':
-        os.system(f'python -m compileall -b {filename}')
-        os.remove(filename)
 
 FILES_TO_UPDATE = [
     'upload_attendance.py',
