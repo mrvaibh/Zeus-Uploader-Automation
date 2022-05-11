@@ -2,7 +2,7 @@ import os, sys, requests, csv, webbrowser, time, logging, traceback
 from datetime import datetime
 from zk import ZK
 
-os.chdir(os.path.dirname(__file__))                                                                     
+os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
 logger = logging.getLogger()
@@ -34,7 +34,7 @@ def log_errors(error):
     ===ERROR=== {str(error)}
     ===TYPE=== {str(exc_type)}
     ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
-    logger ("Process terminate : {}".format(error))
+    logger.error("Process terminate : {}".format(error))
 
 
 def upload_punches_to_server(device_code, punches, script_start_time):
@@ -122,6 +122,7 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             logger.error(f"Not able to get punches from device {sensor_id}", traceback.format_exc())
             attendances = []
             current_machine_time = last_log
+            parsed_punches_tuple = ([], [])
             machine_status = False
             exceptional_error = error
             retries += 1
