@@ -53,9 +53,9 @@ def upload_punches(IP, sensor_id, last_log):
 
         attendances = []
         try:
-            # validating last log time
-            last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
-            current_machine_time = last_log
+            # validating if last log time exists and is correct
+            if datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S'):
+                current_machine_time = last_log
         except:
             current_machine_time = '01-01-1990 00:00:00'
 
@@ -89,8 +89,10 @@ try:
             lines = file.read().splitlines()
 
             SERVER_URL = lines[0]
-            MAX_RETRIES = int(lines[1])
-            TIME_DELAY_FACTOR = int(lines[2])
+
+            if not len(lines) > 1:
+                MAX_RETRIES = int(lines[1])
+                TIME_DELAY_FACTOR = int(lines[2])
 
     # open and get machine list
     file = open('machine_list', 'r')
@@ -152,7 +154,9 @@ try:
             machines_status_html += f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n'''
         else:
             machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
-
+    
+    
+    # writing machine_status.html
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
 
