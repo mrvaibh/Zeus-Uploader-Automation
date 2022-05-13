@@ -7,13 +7,12 @@ BASE_URL = 'https://raw.githubusercontent.com/mrvaibh/Zeus-Uploader-Automation/m
 
 def needs_update():
     response = requests.get(BASE_URL + 'RELEASE')
-
     latest_version = response.content.decode().split('.')
     local_version = None
 
     with open('RELEASE') as file:
         local_version = file.readline().split('.')
-    
+
     # comparing PATCH, MINOR, MAJOR versions respectively
     for v1, v2 in zip(reversed(latest_version), reversed(local_version)):
         if v1 > v2:
@@ -37,7 +36,7 @@ FILES_TO_UPDATE = [
     'machine_status.py',
     'setup.py',
     'RELEASE',
-    'startup.py',
+    'startup.pyw',
 ]
 
 def main():
@@ -48,7 +47,7 @@ def main():
 
 def run_uploader():
     import subprocess
-    subprocess.call('upload_attendance.py', shell=True)
+    subprocess.call('python upload_attendance.py', shell=True)
 
 
 if __name__ == '__main__':
@@ -59,10 +58,10 @@ if __name__ == '__main__':
     import time, schedule
 
     with open('__VENDORS/config.zeus') as file:
-        (railtime, everyhour) = file.readlines()[3].split(',')
+        (railtime, everytime) = file.readlines()[3].split(',')
 
-    if not everyhour: schedule.every().day.at(railtime).do(run_uploader)
-    else: schedule.every(everyhour).hours.at(railtime).do(run_uploader)
+    if not everytime: schedule.every().day.at(railtime).do(run_uploader)
+    else: schedule.every(int(everytime)).hours.at(railtime).do(run_uploader)
     
     while True:
         schedule.run_pending()
