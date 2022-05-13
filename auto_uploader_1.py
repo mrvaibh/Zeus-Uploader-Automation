@@ -22,18 +22,15 @@ logger.addHandler(file_handler)
 logger.addHandler(stdout_handler)
 
 ###### CONSTANTS 
+SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 MAX_RETRIES = 5
 TIME_DELAY_FACTOR = 2
-SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 
 
 def log_errors(error):
     exc_type, exc_obj, exc_tb = sys.exc_info()
     
-    logger.error(f'''[ {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} ]
-    ===ERROR=== {str(error)}
-    ===TYPE=== {str(exc_type)}
-    ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
+    logger.error(f'''(at line: {str(exc_tb.tb_lineno)}) {str(error)} || TYPE: {str(exc_type)}''')
     logger.error("Process terminate : {}".format(error))
 
 
@@ -75,6 +72,7 @@ def save_all_punches_for_debugging(device_code, punches, script_start_time):
         csv_writer.writerows(punches)
 
 def parse_punches(device_punches, sensor_id, last_attendance_time_obj):
+    # TODO: re-check the need for `latest_attendance_timestamp`... I think it's same as device_punches[-1]
     attendances = []
     all_punches = []
     latest_attendance_timestamp = datetime(1999, 1, 1, 0, 0)
@@ -94,7 +92,7 @@ def parse_punches(device_punches, sensor_id, last_attendance_time_obj):
             attendances.append(punch)
         if attendance.timestamp >= latest_attendance_timestamp:
             latest_attendance_timestamp = attendance.timestamp
-    logger.info(f"received total punche = {len(all_punches)},  new punches = {len(attendances)} and latest timestamp - {latest_attendance_timestamp}")
+    logger.info(f"received total punches = {len(all_punches)},  new punches = {len(attendances)} and latest timestamp - {latest_attendance_timestamp}")
     return (attendances, all_punches)
 
 def fetch_punches_from_device(IP, sensor_id, last_log):
@@ -106,13 +104,12 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             time.sleep(TIME_DELAY_FACTOR ** retries)
             logger.info(f'Machine: {IP} -- Attempt {retries + 1}/{MAX_RETRIES}')
             # connect to device
-            if(not conn):
+            if (not conn):
                 conn = zk.connect()
             current_machine_time = conn.get_time().strftime("%d-%m-%Y %H:%M:%S")
-            attendances = []
-            all_punches = []
             last_attendance_time_obj = datetime.strptime(last_log, '%d-%m-%Y %H:%M:%S')
             logger.info(f"last_log_time {last_attendance_time_obj} and current_machine_time {current_machine_time}")
+
             device_raw_punches = conn.get_attendance()
             parsed_punches_tuple = parse_punches(device_raw_punches, sensor_id, last_attendance_time_obj)
             machine_status = True
@@ -120,7 +117,7 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             break
         except Exception as error:
             logger.error(f"Not able to get punches from device {sensor_id}", traceback.format_exc())
-            attendances = []
+            
             current_machine_time = last_log
             parsed_punches_tuple = ([], [])
             machine_status = False
@@ -140,9 +137,10 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
     }
 
 def read_config_file():
+    global SERVER_URL, MAX_RETRIES, TIME_DELAY_FACTOR
     # setting up configurations
-    if os.path.exists('config.zeus') == False:
-        logger.error("config.zeus does not exist. Falling back to defaults")
+    if not os.path.exists('config.zeus'):
+        logger.error("config.zeus does not exist. Falling back to defaults.")
         return
     with open('config.zeus', 'r') as file:
         lines = file.read().splitlines()
@@ -164,8 +162,9 @@ def create_machine_log_file():
             default_last_log_time = ["01-01-1990 00:00:00" for each_line in machine_list]
             csv_writer = csv.writer(csv_file, delimiter=',', lineterminator='\n')
             csv_writer.writerow(IP_list)
+            csv_writer.writerow(default_last_log_time)
 
-def get_last_uploaded_time():
+def get_last_uploaded_log():
     create_machine_log_file()
     # open log file and getting last row
     with open('logs.csv', 'r') as log_file:
@@ -196,19 +195,19 @@ def init():
         logger.info(f"starting auto upload at {script_start_time}")
         read_config_file()
         machine_list = get_machine_list()
-        list_of_last_log = get_last_uploaded_time()
+        list_of_last_logs = get_last_uploaded_log()
         #Updated latest uploaded timestamp for each device
         logs = []
         machines_status_html = '<h1>Last Updated: ' + script_start_time + '</h1><hr>\n'
 
         logger.info("Device IPs and their last updated timestamp")
         logger.info(machine_list)
-        logger.info(list_of_last_log)
+        logger.info(list_of_last_logs)
 
         # Fetching data from all machines one by one
         for (index, each_line) in enumerate(machine_list):
             [IP, sensor_id] = each_line.split(',')
-            last_log = list_of_last_log[index]
+            last_log = list_of_last_logs[index]
             logger.info(f"starting process for {IP} with last_upload_time {last_log}")
             process_result = process_device(IP, sensor_id, last_log, script_start_time)
             logger.info(f"device processed with result {process_result}")
@@ -234,4 +233,5 @@ def init():
         log_errors(error)
 
 
-init()
+if __name__ == '__main__':
+    init()
