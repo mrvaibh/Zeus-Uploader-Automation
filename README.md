@@ -13,7 +13,7 @@
  - run `setup.py`
  - enter SERVER NAME, MAX RETRIES, TIME DELAY, SCHEDULED TIME and MACHINE INFO
 ### Set on startup
- - Copy `startup.py`
+ - Copy `startup.pyw`
  - press `Win+R`, type `shell:startup`
  - press `Ctrl+Shift+V`
 
