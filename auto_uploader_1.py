@@ -113,7 +113,6 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             exceptional_error = None
             break
         except Exception as error:
-            log_errors(error)
             logger.error(f"Not able to get punches from device {sensor_id}")
             logger.error(traceback.format_exc())
             
