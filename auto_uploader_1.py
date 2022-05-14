@@ -1,37 +1,16 @@
-import os, sys, requests, csv, webbrowser, time, logging, traceback
+import os, requests, csv, webbrowser, time, traceback
+from logger import logger, log_errors
 from datetime import datetime
 from zk import ZK
 
 os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
-
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setLevel(logging.INFO)
-stdout_handler.setFormatter(formatter)
-
-file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(formatter)
-
-
-logger.addHandler(file_handler)
-logger.addHandler(stdout_handler)
 
 ###### CONSTANTS 
 SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 MAX_RETRIES = 5
 TIME_DELAY_FACTOR = 2
-
-
-def log_errors(error):
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    
-    logger.error(f'''(at line: {str(exc_tb.tb_lineno)}) {str(error)} || TYPE: {str(exc_type)}''')
-    logger.error("Process terminate : {}".format(error))
 
 
 def upload_punches_to_server(device_code, punches, script_start_time):
@@ -56,13 +35,14 @@ def upload_punches_to_server(device_code, punches, script_start_time):
                 upload_successful = True if response.status_code == 200 else False
             break
         except:
-            logger.error(f"Exception in uploading to server for device_code {device_code}", traceback.format_exc())
+            logger.error(f"Exception in uploading to server for device_code {device_code}")
+            logger.error(traceback.format_exc())
             retries += 1
 
     if(upload_successful):
         logger.info("Upload Successful!")
     else:
-        logger.error("Upload not sucessful|")
+        logger.error("Upload failed!")
 
 def save_all_punches_for_debugging(device_code, punches, script_start_time):
     file_name = f'raw_punches_{script_start_time}-{device_code}.csv'
@@ -111,16 +91,15 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             logger.info(f"last_log_time {last_attendance_time_obj} and current_machine_time {current_machine_time}")
 
             device_raw_punches = conn.get_attendance()
-            parsed_punches_tuple = parse_punches(device_raw_punches, sensor_id, last_attendance_time_obj)
-            machine_status = True
+            attendances, all_punches = parse_punches(device_raw_punches, sensor_id, last_attendance_time_obj)
             exceptional_error = None
             break
         except Exception as error:
-            logger.error(f"Not able to get punches from device {sensor_id}", traceback.format_exc())
+            logger.error(f"Not able to get punches from device {sensor_id}")
+            logger.error(traceback.format_exc())
             
             current_machine_time = last_log
-            parsed_punches_tuple = ([], [])
-            machine_status = False
+            attendances, all_punches = (), ()
             exceptional_error = error
             retries += 1
 
@@ -130,10 +109,9 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
     return {
         'conn': conn,
         'exceptional_error': exceptional_error,
-        'attendances': parsed_punches_tuple[0],
-        'all_punches': parsed_punches_tuple[1],
+        'attendances': attendances,
+        'all_punches': all_punches,
         'current_machine_time': current_machine_time,
-        'machine_status': machine_status,
     }
 
 def read_config_file():
@@ -175,11 +153,10 @@ def get_last_uploaded_log():
 def process_device(IP, sensor_id, last_log, script_start_time):
     returned_data = fetch_punches_from_device(IP, sensor_id, last_log)
     last_log = returned_data['current_machine_time']
-    machine_status = returned_data['machine_status']
     new_punches = returned_data['attendances']
     all_punches = returned_data['all_punches']
     if not returned_data['conn']:
-        logger.error("Error in upload_punch() : {}".format(returned_data['exceptional_error']))
+        logger.error("Error in fetching punches : {}".format(returned_data['exceptional_error']))
         return (last_log, False)
 
     process_successful = False
@@ -196,7 +173,7 @@ def init():
         read_config_file()
         machine_list = get_machine_list()
         list_of_last_logs = get_last_uploaded_log()
-        #Updated latest uploaded timestamp for each device
+        # Updated latest uploaded timestamp for each device
         logs = []
         machines_status_html = '<h1>Last Updated: ' + script_start_time + '</h1><hr>\n'
 
@@ -209,12 +186,14 @@ def init():
             [IP, sensor_id] = each_line.split(',')
             last_log = list_of_last_logs[index]
             logger.info(f"starting process for {IP} with last_upload_time {last_log}")
-            process_result = process_device(IP, sensor_id, last_log, script_start_time)
-            logger.info(f"device processed with result {process_result}")
-            last_log = process_result[0]
+            last_log, process_result = process_device(IP, sensor_id, last_log, script_start_time)
+
+            if process_result == True: logger.info(f"device {IP} process SUCCESSFUL")
+            else: logger.error(f"device {IP} process FAILED")
+
             logs.append(last_log)
             machines_status_html += (f'''<h2 style="color:green;">Machine {IP} -- is OK -- Data Uploaded.</h2>\n''' 
-                                    if process_result[1] else
+                                    if process_result else
                                     f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n''')
 
 
