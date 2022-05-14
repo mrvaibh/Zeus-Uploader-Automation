@@ -1,35 +1,16 @@
-import os, sys, requests, csv, webbrowser, time, logging, traceback
+import os, requests, csv, webbrowser, time, traceback
+from logger import logger, log_errors
 from datetime import datetime
 from zk import ZK
 
 os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
-logger = logging.getLogger()
-logger.setLevel(logging.INFO)
-formatter = logging.Formatter('%(asctime)s | %(levelname)s | %(message)s')
-
-stdout_handler = logging.StreamHandler(sys.stdout)
-stdout_handler.setLevel(logging.INFO)
-stdout_handler.setFormatter(formatter)
-
-file_handler = logging.FileHandler('app.log')
-file_handler.setLevel(logging.INFO)
-file_handler.setFormatter(formatter)
-
-
-logger.addHandler(file_handler)
-logger.addHandler(stdout_handler)
 
 ###### CONSTANTS 
 SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 MAX_RETRIES = 5
 TIME_DELAY_FACTOR = 2
-
-
-def log_errors(error):
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    logger.error(f'''(at line: {str(exc_tb.tb_lineno)}) {str(error)} || TYPE: {str(exc_type)}''')
 
 
 def upload_punches_to_server(device_code, punches, script_start_time):
@@ -54,7 +35,8 @@ def upload_punches_to_server(device_code, punches, script_start_time):
                 upload_successful = True if response.status_code == 200 else False
             break
         except:
-            logger.error(f"Exception in uploading to server for device_code {device_code}", traceback.format_exc())
+            logger.error(f"Exception in uploading to server for device_code {device_code}")
+            logger.error(traceback.format_exc())
             retries += 1
 
     if(upload_successful):
@@ -174,7 +156,7 @@ def process_device(IP, sensor_id, last_log, script_start_time):
     new_punches = returned_data['attendances']
     all_punches = returned_data['all_punches']
     if not returned_data['conn']:
-        logger.error("Error in upload_punch() : {}".format(returned_data['exceptional_error']))
+        logger.error("Error in fetching punches : {}".format(returned_data['exceptional_error']))
         return (last_log, False)
 
     process_successful = False
@@ -191,7 +173,7 @@ def init():
         read_config_file()
         machine_list = get_machine_list()
         list_of_last_logs = get_last_uploaded_log()
-        #Updated latest uploaded timestamp for each device
+        # Updated latest uploaded timestamp for each device
         logs = []
         machines_status_html = '<h1>Last Updated: ' + script_start_time + '</h1><hr>\n'
 
