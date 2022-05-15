@@ -36,7 +36,7 @@ FILES_TO_UPDATE = [
     'machine_status.py',
     'setup.py',
     'RELEASE',
-    'startup.pyw',
+    'startup.py',
 ]
 
 def main():
