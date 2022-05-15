@@ -12,7 +12,7 @@ logger.error(traceback.format_exc())
 
 import os, sys, logging
 
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.chdir('__VENDORS')
 
 logger = logging.getLogger()
