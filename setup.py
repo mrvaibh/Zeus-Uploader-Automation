@@ -40,9 +40,12 @@ os.system('cls')
 
 
 # SCRIPT.BAT
-print('==== Creating Executable Script ====')
+print('==== Creating Executable Scripts ====')
+with open('launch_bat.vbs', 'w') as file:
+    content = f'''Set WshShell = CreateObject("WScript.Shell")\nWshShell.Run chr(34) & "{CURRENT_ABSOLUTE_PATH}\script.bat" & Chr(34), 0\nSet WshShell = Nothing'''
+    file.write(content)
 with open('script.bat', 'w') as file:
-    content = f'''cd /d "{CURRENT_ABSOLUTE_PATH}"\n{PYTHON_ABSOLUTE_PATH} {CURRENT_ABSOLUTE_PATH}\\upload_attendance.py'''
+    content = f'''cd /d "{CURRENT_ABSOLUTE_PATH}"\n{PYTHON_ABSOLUTE_PATH} {CURRENT_ABSOLUTE_PATH}\\startup.py'''
     file.write(content)
 os.system('cls')
 

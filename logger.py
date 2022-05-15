@@ -1,3 +1,15 @@
+'''
+=== USAGE ===
+
+import traceback
+from logger import logger, log_errors
+
+logger.info(...)
+logger.error(...)
+logger.error(traceback.format_exc())
+
+'''
+
 import os, sys, logging
 
 os.chdir(os.path.dirname(__file__))

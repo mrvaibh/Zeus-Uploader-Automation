@@ -1,20 +1,12 @@
-import os, sys, webbrowser
-from datetime import datetime
+import os, webbrowser
+from logger import logger, log_errors
 from zk import ZK
 
+os.chdir(os.path.dirname(__file__))
 os.chdir('__VENDORS')
 
-def log_errors(error):
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-
-    with open('error_log.txt', 'a') as error_log:
-        error_log.write(f'''[ {datetime.now().strftime("%d/%m/%Y, %H:%M:%S")} ]
-    ===ERROR=== {str(error)}
-    ===TYPE=== {str(exc_type)}
-    ===LINENO=== {str(exc_tb.tb_lineno)}\n''')
-
 def get_status(IP):
-    print('Attempting Machine: ', IP)
+    logger.info(f'Checking Machine status: {IP}')
     conn = None
     # create ZK instance
     zk = ZK(IP, port=4370, timeout=60, password=0, force_udp=False, ommit_ping=False)
@@ -59,15 +51,14 @@ try:
             machines_status_html += f'''<h2 style="color:red;">Machine {IP} -- is DOWN -- Connection Failed.</h2>\n'''
 
     # Write entire HTML
-    print('Writing status file...')
+    logger.info('Writing status file...')
     with open('machine_status.html', 'w') as file:
         file.write(machines_status_html)
 
     # open machine_status file in the default web browser
-    print('Opening in browser')
+    logger.info('Opening in browser')
     url = os.path.abspath("machine_status.html")
     webbrowser.open(url, new=2)
 
 except Exception as error:
     log_errors(error)
-    print ("Process terminate : {}".format(error))
