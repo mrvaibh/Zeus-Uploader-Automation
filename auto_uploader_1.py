@@ -3,7 +3,7 @@ from logger import logger, log_errors
 from datetime import datetime
 from zk import ZK
 
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.chdir('__VENDORS')
 
 

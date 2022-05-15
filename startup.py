@@ -1,6 +1,7 @@
 import os, requests
+from logger import logger, log_errors
 
-os.chdir(os.path.dirname(__file__))
+os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
 BASE_URL = 'https://raw.githubusercontent.com/mrvaibh/Zeus-Uploader-Automation/main/'
 
@@ -46,23 +47,27 @@ def main():
             update_file(file)
 
 def run_uploader():
+    logger.info('Running uploader')
     import subprocess
     subprocess.call('python upload_attendance.py', shell=True)
 
 
 if __name__ == '__main__':
-    main()
+    try:
+        main()
 
 
-    # TASK SCHEDULER
-    import time, schedule
+        # TASK SCHEDULER
+        import time, schedule
 
-    with open('__VENDORS/config.zeus') as file:
-        (railtime, everytime) = file.readlines()[3].split(',')
+        with open('__VENDORS/config.zeus') as file:
+            (railtime, everytime) = file.readlines()[3].split(',')
 
-    if not everytime: schedule.every().day.at(railtime).do(run_uploader)
-    else: schedule.every(int(everytime)).hours.at(railtime).do(run_uploader)
-    
-    while True:
-        schedule.run_pending()
-        time.sleep(1)
+        if not everytime: schedule.every().day.at(railtime).do(run_uploader)
+        else: schedule.every(int(everytime)).minutes.do(run_uploader)
+        
+        while True:
+            schedule.run_pending()
+            time.sleep(1)
+    except Exception as error:
+        log_errors(error)

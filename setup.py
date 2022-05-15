@@ -17,7 +17,7 @@ with open('__VENDORS/config.zeus', 'w') as file:
     max_retries = input('Max retires (default: 5) : ') or '5'
     time_delay = input('Time delay in sec (default: 2): ') or '2'
 
-    cron_runtime = input('Run Daily at: ') + ',' + input('Run every how many hrs? (leave blank if NA): ')
+    cron_runtime = input('Run Daily at: ') + ',' + input('Run every how many mins? (leave blank if NA): ')
 
     file.writelines([
         f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload' + '\n',
