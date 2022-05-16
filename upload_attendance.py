@@ -1,4 +1,4 @@
-import os, sys, requests, csv, webbrowser, time
+import os, sys, requests, json, csv, webbrowser, time
 from datetime import datetime
 from zk import ZK
 
@@ -85,12 +85,11 @@ try:
 
     # setting up configurations
     if os.path.exists('config.zeus'):
-        with open('config.zeus', 'r') as file:
-            lines = file.read().splitlines()
-
-            SERVER_URL = lines[0]
-            MAX_RETRIES = int(lines[1])
-            TIME_DELAY_FACTOR = int(lines[2])
+        with open('config.zeus', 'rb') as config_file:
+            configs = json.load(config_file)
+        SERVER_URL = configs['SERVER_URL']
+        MAX_RETRIES = configs['MAX_RETRIES']
+        TIME_DELAY_FACTOR = configs['TIME_DELAY_FACTOR']
 
     # open and get machine list
     file = open('machine_list', 'r')

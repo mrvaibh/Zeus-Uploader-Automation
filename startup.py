@@ -1,4 +1,4 @@
-import os, requests
+import os, requests, json
 from logger import logger, log_errors
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -60,8 +60,8 @@ if __name__ == '__main__':
         # TASK SCHEDULER
         import time, schedule
 
-        with open('__VENDORS/config.zeus') as file:
-            (railtime, everytime) = file.readlines()[3].split(',')
+        with open('__VENDORS/config.zeus', 'rb') as config_file:
+            (railtime, everytime) = json.load(config_file)['CRON_RUNTIME']
 
         if not everytime: schedule.every().day.at(railtime).do(run_uploader)
         else: schedule.every(int(everytime)).minutes.do(run_uploader)
