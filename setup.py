@@ -19,6 +19,7 @@ configs['SERVER_URL'] = f'https://{server_name}.zeustech.in:{port_number}/webapi
 configs['MAX_RETRIES'] = int(input('Max retires (default: 5) : ')) or 5
 configs['TIME_DELAY_FACTOR'] = int(input('Time delay in sec (default: 2): ')) or 2
 configs['CRON_RUNTIME'] = (input('Run Daily at: '), int(input('Run every how many mins? (leave blank if NA): ')))
+configs['ZERO_FILL'] = int(input('Zero fill in USER ID (default: 5) : ')) or 5
 
 with open('__VENDORS/config.zeus', 'w') as config_file:
     json.dump(configs, config_file, indent=4)

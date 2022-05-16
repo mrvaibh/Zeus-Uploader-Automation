@@ -11,6 +11,7 @@ os.chdir('__VENDORS')
 SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 MAX_RETRIES = 5
 TIME_DELAY_FACTOR = 2
+ZERO_FILL = 5
 
 
 def upload_punches_to_server(device_code, punches, script_start_time):
@@ -61,7 +62,7 @@ def parse_punches(device_punches, sensor_id, last_attendance_time_obj):
             continue
         checktime = datetime.strftime(attendance.timestamp, '%d-%m-%Y %H:%M')
         punch = {
-            'Badgenumber': attendance.user_id.zfill(5),
+            'Badgenumber': attendance.user_id.zfill(ZERO_FILL),
             'blank1': '',
             'Checktime':checktime,
             'blank2': '',
@@ -115,7 +116,7 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
     }
 
 def read_config_file():
-    global SERVER_URL, MAX_RETRIES, TIME_DELAY_FACTOR
+    global SERVER_URL, MAX_RETRIES, TIME_DELAY_FACTOR, ZERO_FILL
     # setting up configurations
     if not os.path.exists('config.zeus'):
         logger.error("config.zeus does not exist. Falling back to defaults.")
@@ -126,6 +127,7 @@ def read_config_file():
     SERVER_URL = configs['SERVER_URL']
     MAX_RETRIES = configs['MAX_RETRIES']
     TIME_DELAY_FACTOR = configs['TIME_DELAY_FACTOR']
+    ZERO_FILL = configs['ZERO_FILL']
 
 def get_machine_list() :
     # open and get machine list q
