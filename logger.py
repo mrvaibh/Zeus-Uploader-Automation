@@ -1,12 +1,10 @@
 '''
 === USAGE ===
 
-import traceback
 from logger import logger, log_traces
 
 logger.info(...)
 logger.error(...)
-logger.error(traceback.format_exc())
 
 '''
 
