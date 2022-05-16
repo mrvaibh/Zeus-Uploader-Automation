@@ -2,7 +2,7 @@
 === USAGE ===
 
 import traceback
-from logger import logger, log_errors
+from logger import logger, log_traces
 
 logger.info(...)
 logger.error(...)
@@ -10,7 +10,7 @@ logger.error(traceback.format_exc())
 
 '''
 
-import os, sys, logging
+import os, sys, logging, traceback
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.chdir('__VENDORS')
@@ -32,6 +32,5 @@ logger.addHandler(file_handler)
 logger.addHandler(stdout_handler)
 
 
-def log_errors(error):
-    exc_type, exc_obj, exc_tb = sys.exc_info()
-    logger.error(f'''(at line: {str(exc_tb.tb_lineno)}) {str(error)} || TYPE: {str(exc_type)}''')
+def log_traces():
+    logger.error(traceback.format_exc())

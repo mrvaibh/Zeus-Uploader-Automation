@@ -1,5 +1,5 @@
 import os, requests, json
-from logger import logger, log_errors
+from logger import logger, log_traces
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 
@@ -69,5 +69,5 @@ if __name__ == '__main__':
         while True:
             schedule.run_pending()
             time.sleep(1)
-    except Exception as error:
-        log_errors(error)
+    except:
+        log_traces()
