@@ -37,7 +37,7 @@ def upload_punches(IP, sensor_id, last_log):
 
             if attendance.timestamp >= last_attendance_time_obj:
                 attendances.append({
-                    'Badgenumber': attendance.user_id.zfill(5),
+                    'Badgenumber': attendance.user_id.zfill(ZERO_FILL),
                     'blank1': '',
                     'Checktime': datetime.strftime(attendance.timestamp, '%d-%m-%Y %H:%M'),
                     'blank2': '',
@@ -80,6 +80,7 @@ def upload_punches(IP, sensor_id, last_log):
 try:
     MAX_RETRIES = 5
     TIME_DELAY_FACTOR = 2
+    ZERO_FILL = 5
 
     SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 
@@ -90,6 +91,7 @@ try:
         SERVER_URL = configs['SERVER_URL']
         MAX_RETRIES = configs['MAX_RETRIES']
         TIME_DELAY_FACTOR = configs['TIME_DELAY_FACTOR']
+        ZERO_FILL = configs['ZERO_FILL']
 
     # open and get machine list
     file = open('machine_list', 'r')
