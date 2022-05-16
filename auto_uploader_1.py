@@ -1,5 +1,5 @@
 import os, requests, json, csv, webbrowser, time, traceback
-from logger import logger, log_errors
+from logger import logger, log_traces
 from datetime import datetime
 from zk import ZK
 
@@ -169,7 +169,7 @@ def process_device(IP, sensor_id, last_log, script_start_time):
 #Code starts here. 
 def init():
     try: 
-        script_start_time = datetime.now().strftime("%d-%m-%Y %H %M")
+        script_start_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")
         logger.info(f"starting auto upload at {script_start_time}")
         read_config_file()
         machine_list = get_machine_list()
@@ -209,8 +209,8 @@ def init():
         url = os.path.abspath("machine_status.html")
         webbrowser.open(url, new=2)
 
-    except Exception as error:
-        log_errors(error)
+    except:
+        log_traces()
 
 
 if __name__ == '__main__':

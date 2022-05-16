@@ -1,5 +1,5 @@
 import os, webbrowser
-from logger import logger, log_errors
+from logger import logger, log_traces
 from zk import ZK
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
@@ -16,7 +16,7 @@ def get_status(IP):
         conn = zk.connect()
         machine_status = True
     except Exception as error:
-        log_errors(error)
+        log_traces(error)
         machine_status = False
     finally:
         if conn:
@@ -60,5 +60,5 @@ try:
     url = os.path.abspath("machine_status.html")
     webbrowser.open(url, new=2)
 
-except Exception as error:
-    log_errors(error)
+except:
+    log_traces()

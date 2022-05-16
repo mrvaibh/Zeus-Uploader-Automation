@@ -5,7 +5,7 @@ from zk import ZK
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 os.chdir('__VENDORS')
 
-def log_errors(error):
+def log_traces(error):
     exc_type, exc_obj, exc_tb = sys.exc_info()
 
     with open('error_log.txt', 'a') as error_log:
@@ -49,7 +49,7 @@ def upload_punches(IP, sensor_id, last_log):
         exceptional_error = None
 
     except Exception as error:
-        log_errors(error)
+        log_traces(error)
 
         attendances = []
         try:
@@ -201,4 +201,4 @@ try:
             csv_writer.writerow(logs)
 
 except Exception as error:
-    log_errors(error)
+    log_traces(error)
