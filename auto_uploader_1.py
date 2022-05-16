@@ -37,7 +37,7 @@ def upload_punches_to_server(device_code, punches, script_start_time):
             break
         except:
             logger.error(f"Exception in uploading to server for device_code {device_code}")
-            logger.error(traceback.format_exc())
+            log_traces()
             retries += 1
 
     if(upload_successful):
@@ -97,7 +97,7 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
             break
         except Exception as error:
             logger.error(f"Not able to get punches from device {sensor_id}")
-            logger.error(traceback.format_exc())
+            log_traces()
             
             current_machine_time = last_log
             attendances, all_punches = (), ()
