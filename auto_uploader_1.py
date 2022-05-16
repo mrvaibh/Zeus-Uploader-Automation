@@ -1,4 +1,4 @@
-import os, requests, csv, webbrowser, time, traceback
+import os, requests, json, csv, webbrowser, time, traceback
 from logger import logger, log_errors
 from datetime import datetime
 from zk import ZK
@@ -120,11 +120,12 @@ def read_config_file():
     if not os.path.exists('config.zeus'):
         logger.error("config.zeus does not exist. Falling back to defaults.")
         return
-    with open('config.zeus', 'r') as file:
-        lines = file.read().splitlines()
-        SERVER_URL = lines[0]
-        MAX_RETRIES = int(lines[1])
-        TIME_DELAY_FACTOR = int(lines[2])
+    
+    with open('config.zeus', 'rb') as config_file:
+        configs = json.load(config_file)
+    SERVER_URL = configs['SERVER_URL']
+    MAX_RETRIES = configs['MAX_RETRIES']
+    TIME_DELAY_FACTOR = configs['TIME_DELAY_FACTOR']
 
 def get_machine_list() :
     # open and get machine list q
