@@ -1,4 +1,4 @@
-import os, sys
+import os, sys, json
 
 PYTHON_ABSOLUTE_PATH = sys.executable
 CURRENT_ABSOLUTE_PATH = os.path.abspath('')
@@ -10,21 +10,18 @@ os.system('cls')
 
 
 # CONFIG.ZEUS
-with open('__VENDORS/config.zeus', 'w') as file:
-    server_name = input('\nSERVER NAME: ')
-    port_number = 8500 if server_name == 'demo' else 443
+configs = {}
 
-    max_retries = input('Max retires (default: 5) : ') or '5'
-    time_delay = input('Time delay in sec (default: 2): ') or '2'
+server_name = input('\nSERVER NAME: ')
+port_number = 8500 if server_name == 'demo' else 443
 
-    cron_runtime = input('Run Daily at: ') + ',' + input('Run every how many mins? (leave blank if NA): ')
+configs['SERVER_URL'] = f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload'
+configs['MAX_RETRIES'] = int(input('Max retires (default: 5) : ')) or 5
+configs['TIME_DELAY_FACTOR'] = int(input('Time delay in sec (default: 2): ')) or 2
+configs['CRON_RUNTIME'] = (input('Run Daily at: '), int(input('Run every how many mins? (leave blank if NA): ')))
 
-    file.writelines([
-        f'https://{server_name}.zeustech.in:{port_number}/webapi/checkInOut/file/upload' + '\n',
-        max_retries + '\n',
-        time_delay + '\n',
-        cron_runtime
-    ])
+with open('__VENDORS/config.zeus', 'w') as config_file:
+    json.dump(configs, config_file, indent=4)
 
 # MACHINE_LIST
 no_of_machines = int(input('\nTotal Number of Machines: '))
