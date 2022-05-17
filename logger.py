@@ -3,8 +3,11 @@
 
 from logger import logger, log_traces
 
+# single line logging
 logger.info(...)
 logger.error(...)
+# multi-level tracing
+log_traces()
 
 '''
 
