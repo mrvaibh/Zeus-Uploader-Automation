@@ -25,12 +25,13 @@ with open('__VENDORS/config.zeus', 'w') as config_file:
     json.dump(configs, config_file, indent=4)
 
 # MACHINE_LIST
-no_of_machines = int(input('\nTotal Number of Machines: '))
-print('\nType machine IP and number like this "192.168.88.201,12"')
+company_unit = input('\nCompany Unit number: ')
+no_of_machines = int(input('Total Number of Machines: '))
+print('\nType machine IP and number like this "192.168.88.201"')
 
 machine_file_content = ''
 for i in range(1, no_of_machines+1):
-    machine_file_content += input(f'Machine {i}: ') + '\n'
+    machine_file_content += input(f'Machine {i} IP: ') + ',' + str(company_unit) + str(i) + '\n'
 
 with open('__VENDORS/machine_list', 'w') as file:
     file.write(machine_file_content)
