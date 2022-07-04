@@ -3,10 +3,10 @@ __pycache__/
 *.py[cod]
 *$py.class
 
-__VENDORS/logs.csv
-__VENDORS/error_log.txt
-__VENDORS/machine_status.html
-__VENDORS/mytable.csv
+# Custom ignores
+__VENDORS/
+!__VENDORS/config.zeus
+!__VENDORS/machine_list
 
 # C extensions
 *.so

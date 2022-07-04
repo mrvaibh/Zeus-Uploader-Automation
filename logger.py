@@ -6,6 +6,7 @@ from logger import logger, log_traces
 # single line logging
 logger.info(...)
 logger.error(...)
+
 # multi-level tracing
 log_traces()
 
@@ -13,7 +14,9 @@ log_traces()
 
 import os, sys, logging, traceback
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+###### goto __VENDORS
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(CURRENT_DIR)
 os.chdir('__VENDORS')
 
 logger = logging.getLogger()

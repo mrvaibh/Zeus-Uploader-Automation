@@ -1,7 +1,9 @@
 import os, requests, json
 from logger import logger, log_traces
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+###### coming back to current dir
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(CURRENT_DIR)
 
 BASE_URL = 'https://raw.githubusercontent.com/mrvaibh/Zeus-Uploader-Automation/main/'
 
@@ -32,8 +34,8 @@ def update_file(filename):
         file.write(latest_file_content)
 
 FILES_TO_UPDATE = [
+    'auto_uploader.py',
     'upload_attendance.py',
-    'upload_attendance_fast.py',
     'machine_status.py',
     'setup.py',
     'RELEASE',
@@ -49,7 +51,7 @@ def main():
 def run_uploader():
     logger.info('Running uploader')
     import subprocess
-    subprocess.call('python upload_attendance.py', shell=True)
+    subprocess.call('python auto_uploader.py', shell=True)
 
 
 if __name__ == '__main__':

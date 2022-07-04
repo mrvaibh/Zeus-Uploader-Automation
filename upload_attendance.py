@@ -2,7 +2,9 @@ import os, sys, requests, json, csv, webbrowser, time
 from datetime import datetime
 from zk import ZK
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
+###### goto __VENDORS
+CURRENT_DIR = os.path.dirname(os.path.abspath(__file__))
+os.chdir(CURRENT_DIR)
 os.chdir('__VENDORS')
 
 def log_traces(error):
