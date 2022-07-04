@@ -3,21 +3,26 @@ from logger import logger, log_traces
 from datetime import datetime
 from zk import ZK
 
-os.chdir(os.path.dirname(os.path.abspath(__file__)))
-os.chdir('__VENDORS')
-
-
 ###### CONSTANTS 
 SERVER_URL = 'https://demo.zeustech.in:8500/webapi/checkInOut/file/upload'
 MAX_RETRIES = 5
 TIME_DELAY_FACTOR = 2
 ZERO_FILL = 5
 
+def get_filename(script_start_time, device_code, file_type):
+    if not os.path.exists(file_type):
+        os.makedirs(file_type)
+        logger.info(f'Created directory {file_type}')
+
+    script_start_time_nocolon = script_start_time.replace(':', '-')
+    file_name = f'{file_type}_{script_start_time_nocolon}-device_{device_code}.csv'
+
+    return f'{file_type}/{file_name}'
 
 def upload_punches_to_server(device_code, punches, script_start_time):
-
     logger.info(f"uploading punches for device - {device_code} with {len(punches)} punches")
-    file_name = f'data_uploaded-{script_start_time}-device_{device_code}.csv'
+
+    file_name = get_filename(script_start_time, device_code, 'data_uploaded')
     with open(file_name, 'w') as csv_file:
         field_names = ['Badgenumber', 'blank1', 'Checktime', 'blank2', 'Sensorid']
         csv_writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=',', lineterminator='\n') # default field-delimiter is ","
@@ -29,6 +34,7 @@ def upload_punches_to_server(device_code, punches, script_start_time):
     while retries < MAX_RETRIES:
         try:
             time.sleep(TIME_DELAY_FACTOR ** retries)
+
             with open(file_name, 'r') as csv_file:
                 data = csv_file.read()
                 response = requests.post(SERVER_URL, data=data, headers={'Content-type': 'application/text'}, verify=False, allow_redirects=True)
@@ -40,13 +46,13 @@ def upload_punches_to_server(device_code, punches, script_start_time):
             log_traces()
             retries += 1
 
-    if(upload_successful):
+    if (upload_successful):
         logger.info("Upload Successful!")
     else:
         logger.error("Upload failed!")
 
 def save_all_punches_for_debugging(device_code, punches, script_start_time):
-    file_name = f'raw_punches_{script_start_time}-{device_code}.csv'
+    file_name = get_filename(script_start_time, device_code, 'raw_punches')
     with open(file_name, 'w') as csv_file:
         field_names = ['Badgenumber', 'blank1', 'Checktime', 'blank2', 'Sensorid']
         csv_writer = csv.DictWriter(csv_file, fieldnames=field_names, delimiter=',', lineterminator='\n') # default field-delimiter is ","
@@ -98,7 +104,7 @@ def fetch_punches_from_device(IP, sensor_id, last_log):
         except Exception as error:
             logger.error(f"Not able to get punches from device {sensor_id}")
             log_traces()
-            
+
             current_machine_time = last_log
             attendances, all_punches = (), ()
             exceptional_error = error
@@ -162,13 +168,13 @@ def process_device(IP, sensor_id, last_log, script_start_time):
         logger.error("Error in fetching punches : {}".format(returned_data['exceptional_error']))
         return (last_log, False)
 
-    process_successful = False
+    is_process_successful = False
     upload_punches_to_server(sensor_id, new_punches, script_start_time)
     save_all_punches_for_debugging(sensor_id, all_punches, script_start_time)
-    process_successful = True
-    return (last_log, process_successful)
+    is_process_successful = True
+    return (last_log, is_process_successful)
 
-#Code starts here. 
+# Code starts here. 
 def init():
     try: 
         script_start_time = datetime.now().strftime("%d-%m-%Y %H:%M:%S")

@@ -1,4 +1,10 @@
-http://demo.zeustech.in:8082/webapi/checkInOut/file/upload
-5
-2
-10:00,1
+{
+    "SERVER_URL": "https://demo.zeustech.in:8500/webapi/checkInOut/file/upload",
+    "MAX_RETRIES": 5,
+    "TIME_DELAY_FACTOR": 2,
+    "CRON_RUNTIME": [
+        "10:00",
+        "1"
+    ],
+    "ZERO_FILL": 5
+}
