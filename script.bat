@@ -1,2 +1,2 @@
-cd /d "E:\Zeus-Uploader-Automation-main"
-C:\easytime\Python37\python.exe E:\Zeus-Uploader-Automation-main\startup.py
+cd /d "<ABSOLUTE_PATH_TO_DIR>"
+<ABSOLUTE_PATH_TO_PYTHON> <ABSOLUTE_PATH_TO_DIR>
